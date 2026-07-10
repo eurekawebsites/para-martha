@@ -454,6 +454,11 @@
   buildPages();
   updateChrome();
   fitAllLeaves();
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(fitAllLeaves);
+  }
+  setTimeout(fitAllLeaves, 500);
   window.addEventListener('resize', fitAllLeaves);
 
   document.getElementById('tapNext').addEventListener('click', goNext);
