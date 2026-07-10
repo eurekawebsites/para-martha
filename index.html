@@ -151,20 +151,38 @@
     margin-bottom: 0;
   }
 
+  .poem-signature {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 600;
+    font-size: 0.75em;
+    color: #9c8567;
+    margin-top: 1.6em !important;
+  }
+
   .final-wrap {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 16px;
     width: 100%;
     height: 100%;
   }
 
   .final-wrap img {
     max-width: min(360px, 80vw);
-    max-height: 100%;
+    max-height: 82%;
     width: auto;
     height: auto;
     border-radius: 2px;
+  }
+
+  .final-date {
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic;
+    font-size: 13px;
+    color: #b3a289;
+    text-align: center;
   }
 
   /* ---------- CHROME (minimal) ---------- */
@@ -336,7 +354,9 @@
       var paragraphs = text.split('\n\n').map(function (stanza) {
         return '<p>' + escapeHtml(stanza).replace(/\n/g, '<br>') + '</p>';
       }).join('');
-      leaf.innerHTML = '<div class="leaf-text">' + paragraphs + '</div>';
+      var isLastPoemPage = i === pagesData.length - 1;
+      var signature = isLastPoemPage ? '<p class="poem-signature">— Aster Íñigo Volta</p>' : '';
+      leaf.innerHTML = '<div class="leaf-text">' + paragraphs + signature + '</div>';
       stage.appendChild(leaf);
     });
 
@@ -345,6 +365,7 @@
     finalLeaf.innerHTML =
       '<div class="final-wrap">' +
         '<img src="assets/us.jpeg" alt="Nosotros">' +
+        '<div class="final-date">7 de julio, 2026</div>' +
       '</div>';
     stage.appendChild(finalLeaf);
   }
