@@ -115,31 +115,24 @@
     overflow: hidden;
     text-align: left;
     opacity: 0;
-    transform: translateX(0);
-    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(.4,0,.2,1);
+    transform: translateY(0);
+    transition: opacity 0.7s ease, transform 0.7s ease;
     pointer-events: none;
   }
 
   .leaf.active {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
     pointer-events: auto;
     position: relative;
   }
 
-  .leaf.exit-left {
+  .leaf.exit-up {
     opacity: 0;
-    transform: translateX(-60px);
+    transform: translateY(-18px);
   }
-  .leaf.exit-right {
-    opacity: 0;
-    transform: translateX(60px);
-  }
-  .leaf.enter-left {
-    transform: translateX(-60px);
-  }
-  .leaf.enter-right {
-    transform: translateX(60px);
+  .leaf.enter-below {
+    transform: translateY(18px);
   }
 
   .leaf-text {
@@ -429,25 +422,24 @@
   function goTo(index) {
     if (index < 0 || index >= totalPages || index === current) return;
     var leaves = stage.querySelectorAll('.leaf');
-    var goingForward = index > current;
     var outgoing = leaves[current];
     var incoming = leaves[index];
 
     outgoing.classList.remove('active');
-    outgoing.classList.add(goingForward ? 'exit-left' : 'exit-right');
+    outgoing.classList.add('exit-up');
 
-    incoming.classList.add(goingForward ? 'enter-right' : 'enter-left');
+    incoming.classList.add('enter-below');
     // force layout so the enter position is applied before removing it
     incoming.getBoundingClientRect();
     incoming.classList.add('active');
-    incoming.classList.remove('enter-right', 'enter-left');
+    incoming.classList.remove('enter-below');
 
     current = index;
     updateChrome();
 
     setTimeout(function () {
-      outgoing.classList.remove('exit-left', 'exit-right');
-    }, 500);
+      outgoing.classList.remove('exit-up');
+    }, 700);
   }
 
   function goNext() { goTo(current + 1); }
