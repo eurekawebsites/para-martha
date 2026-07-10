@@ -177,12 +177,22 @@
     border-radius: 2px;
   }
 
+  .final-monogram {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 600;
+    font-size: clamp(20px, 3.5vw, 26px);
+    letter-spacing: 2px;
+    color: #9c8567;
+    text-align: center;
+  }
+
   .final-date {
     font-family: 'Lora', Georgia, serif;
     font-style: italic;
     font-size: 13px;
     color: #b3a289;
     text-align: center;
+    margin-top: -8px;
   }
 
   /* ---------- CHROME (minimal) ---------- */
@@ -365,6 +375,7 @@
     finalLeaf.innerHTML =
       '<div class="final-wrap">' +
         '<img src="assets/us.jpeg" alt="Nosotros">' +
+        '<div class="final-monogram">M &#8734; A</div>' +
         '<div class="final-date">7 de julio, 2026</div>' +
       '</div>';
     stage.appendChild(finalLeaf);
