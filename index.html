@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Para Martha</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    overscroll-behavior: none;
+    background: #f7f2ea;
+    font-family: 'Lora', Georgia, serif;
+    color: #3a3128;
+    -webkit-text-size-adjust: 100%;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  #app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ---------- TITLE SCREEN ---------- */
+  #title-screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 40;
+    opacity: 1;
+    cursor: pointer;
+    transition: opacity 1.2s ease;
+  }
+  #title-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .title-text {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 600;
+    font-size: clamp(26px, 6vw, 44px);
+    color: #3a3128;
+    text-align: center;
+    max-width: 90vw;
+    padding: 0 20px;
+  }
+
+  .title-hint {
+    position: absolute;
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #9c8567;
+    opacity: 0.7;
+    animation: pulseHint 2.4s ease-in-out infinite;
+  }
+
+  @keyframes pulseHint {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 0.9; }
+  }
+
+  /* ---------- READER ---------- */
+  #reader {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.1s ease;
+  }
+  #reader.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .reader-stage {
+    position: absolute;
+    inset: 0;
+    bottom: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8vw;
+  }
+
+  .leaf {
+    position: absolute;
+    max-width: 620px;
+    width: 100%;
+    max-height: 100%;
+    text-align: left;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    pointer-events: none;
+  }
+
+  .leaf.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    position: relative;
+  }
+
+  .leaf-text {
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(15px, 2.6vw, 22px);
+    line-height: 1.85;
+    color: #3a3128;
+  }
+
+  .leaf-text p {
+    margin: 0 0 1.6em 0;
+  }
+  .leaf-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .final-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .final-wrap img {
+    max-width: min(280px, 60vw);
+    max-height: 50vh;
+    width: auto;
+    height: auto;
+    border-radius: 2px;
+  }
+
+  .final-caption {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 600;
+    font-size: clamp(24px, 4vw, 32px);
+    color: #3a3128;
+    text-align: center;
+  }
+
+  .final-signature {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 600;
+    font-size: clamp(18px, 3vw, 22px);
+    color: #9c8567;
+    text-align: center;
+  }
+
+  .final-date {
+    font-family: 'Lora', Georgia, serif;
+    font-style: italic;
+    font-size: 13px;
+    color: #b3a289;
+    text-align: center;
+    margin-top: -14px;
+  }
+
+  /* ---------- CHROME (minimal) ---------- */
+  .tap-zone {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    z-index: 5;
+    cursor: pointer;
+  }
+  .tap-zone.left { left: 0; }
+  .tap-zone.right { right: 0; }
+
+  .counter {
+    position: fixed;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #9c8567;
+    z-index: 6;
+    pointer-events: none;
+  }
+
+  .progress-track {
+    position: fixed;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(200px, 50vw);
+    height: 1px;
+    background: rgba(58,49,40,0.15);
+    z-index: 6;
+  }
+  .progress-fill {
+    height: 100%;
+    background: #9c8567;
+    transition: width 0.5s ease;
+  }
+
+  #music-toggle {
+    position: fixed;
+    top: 22px;
+    right: 22px;
+    z-index: 60;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    color: #9c8567;
+    font-size: 16px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  #music-toggle.visible { display: flex; }
+  #music-toggle:hover { opacity: 1; }
+
+  @media (max-width: 640px) {
+    .reader-stage { padding: 10vh 7vw; }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- TITLE -->
+  <div id="title-screen">
+    <div class="title-text">Para el amor de mi vida, Martha</div>
+    <div class="title-hint">toca para comenzar</div>
+  </div>
+
+  <button id="music-toggle" aria-label="Música">&#9835;</button>
+  <audio id="bg-music" src="assets/song.mp4" loop preload="auto"></audio>
+
+  <!-- READER -->
+  <div id="reader">
+    <div class="reader-stage" id="stage">
+      <!-- leaves injected by JS -->
+    </div>
+    <div class="tap-zone left" id="tapPrev"></div>
+    <div class="tap-zone right" id="tapNext"></div>
+    <div class="counter" id="counter"></div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var pagesData = [
+    "Keats una vez preguntó:\n\n¿Existe otra vida?\nTiene que existir.\n\nTiene que existir.",
+
+    "Tiene que haber una vida\ndonde la mañana no empiece\nteniendo que negociar tu ausencia.\n\nUna vida\ndonde despierto dentro\nde la geografía de tus brazos,\ndonde tu latido\nno es algo que recuerdo,\nsino algo que interrumpe mis sueños.",
+
+    "Donde besas mi frente—\nuna vez por despertar,\nuna vez para desearme suerte,\nuna vez porque irse es más fácil\ncuando el amor ya se ha dicho.\n\nDonde la despedida es común.\n\nQuiero una despedida común.",
+
+    "Quiero verte buscar tus llaves.\nQuiero recordarte que están\nen la bolsa que usaste ayer.\nQuiero que pongas los ojos en blanco\nporque otra vez tengo razón.",
+
+    "Quiero escribirte,\n\"¿Ya comiste?\"\naunque ya sé la respuesta\nporque preparé tu almuerzo.",
+
+    "Quiero saber\nque llegaste bien al trabajo,\nno porque mi ansiedad\nexigiera pruebas,\nsino porque tu llegada\nes simplemente otro hecho del día,\ncomo el amanecer,\ncomo la gravedad,\ncomo el sabor de tu nombre\nque aún persiste\nen mi boca.\n\nTiene que haber otra vida.",
+
+    "Una donde el anochecer\nno se siente como sobrevivir.\n\nUna donde seguimos volviendo\na la misma puerta,\nal mismo par de zapatos\nacomodados con cuidado junto a la entrada,\na la misma cama\nque tendemos juntos cada mañana.",
+
+    "Donde cada versión del mundo\ntermina con \"ya llegué a casa.\"\n\nY mi casa,\neres tú.",
+
+    "Los domingos,\ndespierto antes que tú,\nsolo para ganarme el privilegio\nde ver al sueño habitar tu rostro.\n\nHago pan francés—\ndemasiada mantequilla,\ndemasiada miel de maple,\nexactamente como insistes que debe ser.",
+
+    "Me robas el pedazo más crujiente\nde mi plato\ny finjo estar ofendido\nporque hay felicidad\nque solo existe\nsi alguien está ahí\npara ser testigo.",
+
+    "Tu mano encuentra mi regazo\nsin pedir permiso.\n\nComo si las manos,\ncuando han amado lo suficiente,\ndejaran de necesitar direcciones.",
+
+    "Beso la parte de atrás de tu oreja.\n\nEl lugar\ndonde imagino que nace\ncada frase hermosa\nantes de volverse sonido.\n\n\"Te amo,\"\ndigo,\npero sobre todo\npaso los años\naprendiendo a decirlo\nsin lenguaje.",
+
+    "Te desplomas en mis brazos.\n\nNo porque el mundo fuera cruel.\n\nNo porque necesitaras que te salvaran.\n\nSolo porque tu cuerpo\nha aprendido\nque el mío\nes donde se vuelve más ligero.",
+
+    "Tiene que haber otra vida.\n\nUna donde cada inconveniente\nes una excusa para escuchar tu voz.",
+
+    "Donde te llamo\nporque quemé la cena,\no lloré por algo\nridículo,\no vi una casa que se parecía\na la que soñamos.\n\nY cada vez\nme contestas\ncomo si yo nunca\nfuera una interrupción.",
+
+    "Tiene que haber otra vida\n\ndonde el tiempo y la distancia\nse avergüencen\nde lo poco que pueden\ncontra nosotros.\n\nDonde cruzamos mares y fronteras\nsin llevar la cuenta.",
+
+    "Donde el amor\nse mide\nno por gestos grandiosos,\nsino por las mil formas invisibles\nen que seguimos eligiéndonos\nel uno al otro,\ntodos los días.\n\nTiene que haber otra vida.",
+
+    "Donde las montañas\nrecuerdan nuestra risa\nmucho después de que dejamos de hacer eco.\n\nDonde los ríos\nsaben nuestros nombres.\n\nDonde cada banca\nen la que nos sentamos\nse convierte en un monumento.",
+
+    "Donde tus manos\nrecuerdan las mías\ncon la misma certeza\ncon que los pájaros recuerdan el cielo.",
+
+    "Donde tus huellas\nsobreviven tu tacto.\n\nDonde nunca tengo que preguntarme\nsi esta es la última vez\nque sostendré tu rostro\nentre mis dos manos.",
+
+    "Quizás el cielo\nno es para siempre.\n\nQuizás el cielo\nes simplemente la vida\ndonde nada hermoso\ntiene que terminar antes de tiempo.",
+
+    "Quizás eso es lo que Keats quiso decir.\n\nO quizás\nél era solo otra persona\nque amó a alguien lo suficiente\npara creer\nque el universo\nno podría ser tan cruel\ncomo para darnos tanta\nternura\nsolo una vez.",
+
+    "Porque si un amor así\npuede existir,\n\nentonces en algún lugar—\n\nya sea después de esta vida,\no junto a ella,\no escondido dentro de la que casi tuvimos—",
+
+    "Tiene que haber una mañana\n\nen la que despierte,\n\ny lo primero que busque\nya no sea\nla esperanza.\n\nSeas tú."
+  ];
+
+  var totalPages = pagesData.length + 1; // +1 for final photo page
+  var stage = document.getElementById('stage');
+  var counter = document.getElementById('counter');
+  var progressFill = document.getElementById('progressFill');
+  var current = 0;
+
+  function buildPages() {
+    pagesData.forEach(function (text, i) {
+      var leaf = document.createElement('div');
+      leaf.className = 'leaf' + (i === 0 ? ' active' : '');
+      var paragraphs = text.split('\n\n').map(function (stanza) {
+        return '<p>' + escapeHtml(stanza).replace(/\n/g, '<br>') + '</p>';
+      }).join('');
+      leaf.innerHTML = '<div class="leaf-text">' + paragraphs + '</div>';
+      stage.appendChild(leaf);
+    });
+
+    var finalLeaf = document.createElement('div');
+    finalLeaf.className = 'leaf';
+    finalLeaf.innerHTML =
+      '<div class="final-wrap">' +
+        '<div class="final-caption">Tiene que haber otra vida.<br>Pero mientras tanto,<br>me quedo con esta, contigo.</div>' +
+        '<div class="final-signature">— Aster</div>' +
+        '<div class="final-date">7 de julio, 2026</div>' +
+        '<img src="assets/us.jpeg" alt="Nosotros">' +
+      '</div>';
+    stage.appendChild(finalLeaf);
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function fitText(leaf) {
+    var textEl = leaf.querySelector('.leaf-text');
+    if (!textEl) return;
+    var maxHeight = stage.clientHeight - 40;
+
+    var size = 22;
+    var gap = 1.6;
+    textEl.style.fontSize = size + 'px';
+    setStanzaGap(textEl, gap);
+
+    // first, tighten the space between stanzas
+    while (textEl.scrollHeight > maxHeight && gap > 0.4) {
+      gap -= 0.2;
+      setStanzaGap(textEl, gap);
+    }
+
+    // only shrink the type itself if tightening spacing wasn't enough
+    while (textEl.scrollHeight > maxHeight && size > 13) {
+      size -= 1;
+      textEl.style.fontSize = size + 'px';
+    }
+  }
+
+  function setStanzaGap(textEl, emValue) {
+    var paragraphs = textEl.querySelectorAll('p');
+    for (var i = 0; i < paragraphs.length - 1; i++) {
+      paragraphs[i].style.marginBottom = emValue + 'em';
+    }
+  }
+
+  function fitAllLeaves() {
+    stage.querySelectorAll('.leaf').forEach(fitText);
+  }
+
+  function updateChrome() {
+    counter.textContent = (current + 1) + ' / ' + totalPages;
+    progressFill.style.width = ((current + 1) / totalPages * 100) + '%';
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= totalPages || index === current) return;
+    var leaves = stage.querySelectorAll('.leaf');
+    leaves[current].classList.remove('active');
+    current = index;
+    leaves[current].classList.add('active');
+    updateChrome();
+  }
+
+  function goNext() { goTo(current + 1); }
+  function goPrev() { goTo(current - 1); }
+
+  buildPages();
+  updateChrome();
+  fitAllLeaves();
+  window.addEventListener('resize', fitAllLeaves);
+
+  document.getElementById('tapNext').addEventListener('click', goNext);
+  document.getElementById('tapPrev').addEventListener('click', goPrev);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') goNext();
+    if (e.key === 'ArrowLeft') goPrev();
+  });
+
+  // swipe support
+  var touchStartX = null;
+  var reader = document.getElementById('reader');
+  reader.addEventListener('touchstart', function (e) {
+    touchStartX = e.touches[0].clientX;
+  });
+  reader.addEventListener('touchend', function (e) {
+    if (touchStartX === null) return;
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    if (dx < -40) goNext();
+    if (dx > 40) goPrev();
+    touchStartX = null;
+  });
+
+  // ---- title intro ----
+  var titleScreen = document.getElementById('title-screen');
+
+  titleScreen.addEventListener('click', function () {
+    if (titleScreen.classList.contains('hidden')) return;
+    titleScreen.classList.add('hidden');
+    reader.classList.add('show');
+    startMusic();
+  });
+
+  // ---- music ----
+  var bgMusic = document.getElementById('bg-music');
+  var musicToggle = document.getElementById('music-toggle');
+  var musicPlaying = false;
+
+  function startMusic() {
+    bgMusic.volume = 0.35;
+    bgMusic.play().then(function () {
+      musicPlaying = true;
+      musicToggle.classList.add('visible');
+      musicToggle.innerHTML = '&#9835;';
+    }).catch(function () {
+      // no track present yet, or autoplay blocked — stay silent
+    });
+  }
+
+  musicToggle.addEventListener('click', function () {
+    if (musicPlaying) {
+      bgMusic.pause();
+      musicToggle.innerHTML = '&#9834;';
+    } else {
+      bgMusic.play();
+      musicToggle.innerHTML = '&#9835;';
+    }
+    musicPlaying = !musicPlaying;
+  });
+
+})();
+</script>
+
+</body>
+</html>
