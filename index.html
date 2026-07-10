@@ -115,16 +115,31 @@
     overflow: hidden;
     text-align: left;
     opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+    transform: translateX(0);
+    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(.4,0,.2,1);
     pointer-events: none;
   }
 
   .leaf.active {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
     pointer-events: auto;
     position: relative;
+  }
+
+  .leaf.exit-left {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+  .leaf.exit-right {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+  .leaf.enter-left {
+    transform: translateX(-60px);
+  }
+  .leaf.enter-right {
+    transform: translateX(60px);
   }
 
   .leaf-text {
@@ -282,49 +297,59 @@
   var pagesData = [
     "Keats una vez preguntó:\n\n¿Existe otra vida?\nTiene que existir.\n\nTiene que existir.",
 
-    "Tiene que haber una vida\ndonde la mañana\nno empiece\nteniendo que negociar\ntu ausencia.\n\nUna vida\ndonde despierto dentro\nde la geografía\nde tus brazos,\ndonde tu latido\nno es algo\nque recuerdo,\nsino algo\nque interrumpe mis sueños.",
+    "Tiene que haber una vida\ndonde la mañana\nno empiece\nteniendo que negociar\ntu ausencia.\n\nUna vida\ndonde despierto dentro\nde la geografía\nde tus brazos,",
 
-    "Donde besas mi frente—\nuna vez por despertar,\nuna vez para desearme suerte,\nuna vez\nporque irse es más fácil\ncuando el amor\nya se ha dicho.\n\nDonde la despedida\nes común.\n\nQuiero una despedida\ncomún.",
+    "donde tu latido\nno es algo\nque recuerdo,\nsino algo\nque interrumpe mis sueños.\n\nDonde besas mi frente—\nuna vez por despertar,\nuna vez para desearme suerte,",
+
+    "una vez\nporque irse es más fácil\ncuando el amor\nya se ha dicho.\n\nDonde la despedida\nes común.\n\nQuiero una despedida\ncomún.",
 
     "Quiero verte\nbuscar tus llaves.\nQuiero recordarte\nque están\nen la bolsa\nque usaste ayer.\nQuiero que pongas\nlos ojos en blanco\nporque otra vez\ntengo razón.",
 
-    "Quiero escribirte,\n\"¿Ya comiste?\"\naunque ya sé\nla respuesta\nporque preparé\ntu almuerzo.",
+    "Quiero escribirte,\n\"¿Ya comiste?\"\naunque ya sé\nla respuesta\nporque preparé\ntu almuerzo.\n\nQuiero saber\nque llegaste bien\nal trabajo,",
 
-    "Quiero saber\nque llegaste bien\nal trabajo,\nno porque mi ansiedad\nexigiera pruebas,\nsino porque tu llegada\nes simplemente\notro hecho del día,\ncomo el amanecer,\ncomo la gravedad,\ncomo el sabor de tu nombre\nque aún persiste\nen mi boca.\n\nTiene que haber otra vida.",
+    "no porque mi ansiedad\nexigiera pruebas,\nsino porque tu llegada\nes simplemente\notro hecho del día,\ncomo el amanecer,\ncomo la gravedad,",
 
-    "Una donde el anochecer\nno se siente\ncomo sobrevivir.\n\nUna donde seguimos volviendo\na la misma puerta,\nal mismo par de zapatos\nacomodados con cuidado\njunto a la entrada,\na la misma cama\nque tendemos juntos\ncada mañana.",
+    "como el sabor de tu nombre\nque aún persiste\nen mi boca.\n\nTiene que haber otra vida.\n\nUna donde el anochecer\nno se siente\ncomo sobrevivir.",
 
-    "Donde cada versión del mundo\ntermina con\n\"ya llegué a casa.\"\n\nY mi casa,\neres tú.",
+    "Una donde seguimos volviendo\na la misma puerta,\nal mismo par de zapatos\nacomodados con cuidado\njunto a la entrada,\na la misma cama\nque tendemos juntos\ncada mañana.",
 
-    "Los domingos,\ndespierto antes que tú,\nsolo para ganarme\nel privilegio\nde ver al sueño\nhabitar tu rostro.\n\nHago pan francés—\ndemasiada mantequilla,\ndemasiada miel de maple,\nexactamente\ncomo insistes\nque debe ser.",
+    "Donde cada versión del mundo\ntermina con\n\"ya llegué a casa.\"\n\nY mi casa,\neres tú.\n\nLos domingos,\ndespierto antes que tú,",
+
+    "solo para ganarme\nel privilegio\nde ver al sueño\nhabitar tu rostro.\n\nHago pan francés—\ndemasiada mantequilla,\ndemasiada miel de maple,\nexactamente\ncomo insistes\nque debe ser.",
 
     "Me robas\nel pedazo más crujiente\nde mi plato\ny finjo\nestar ofendido\nporque hay felicidad\nque solo existe\nsi alguien está ahí\npara ser testigo.",
 
     "Tu mano\nencuentra mi regazo\nsin pedir permiso.\n\nComo si las manos,\ncuando han amado\nlo suficiente,\ndejaran de necesitar\ndirecciones.",
 
-    "Beso\nla parte de atrás\nde tu oreja.\n\nEl lugar\ndonde imagino que nace\ncada frase hermosa\nantes de volverse\nsonido.\n\n\"Te amo,\"\ndigo,\npero sobre todo\npaso los días\naprendiendo a decirlo\nsin lenguaje.",
+    "Beso\nla parte de atrás\nde tu oreja.\n\nEl lugar\ndonde imagino que nace\ncada frase hermosa\nantes de volverse\nsonido.",
 
-    "Te desplomas\nen mis brazos.\n\nNo porque el mundo\nfuera cruel.\n\nNo porque necesitaras\nque te salvaran.\n\nSolo porque tu cuerpo\nha aprendido\nque el mío\nes donde\nse vuelve más ligero.",
+    "\"Te amo,\"\ndigo,\npero sobre todo\npaso los días\naprendiendo a decirlo\nsin lenguaje.\n\nTe desplomas\nen mis brazos.",
 
-    "Tiene que haber otra vida.\n\nUna donde\ncada inconveniente\nes una excusa\npara escuchar tu voz.",
+    "No porque el mundo\nfuera cruel.\n\nNo porque necesitaras\nque te salvaran.\n\nSolo porque tu cuerpo\nha aprendido\nque el mío\nes donde\nse vuelve más ligero.",
 
-    "Donde te llamo\nporque quemé la cena,\no lloré por algo\nridículo,\no vi una casa\nque se parecía\na la que soñamos construir.\n\nY cada vez\nme contestas\ncomo si yo nunca\nfuera una interrupción.",
+    "Tiene que haber otra vida.\n\nUna donde\ncada inconveniente\nes una excusa\npara escuchar tu voz.\n\nDonde te llamo\nporque quemé la cena,",
 
-    "Tiene que haber otra vida\ndonde el tiempo\ny la distancia\nse avergüencen\nde lo poco\nque pueden\ncontra nosotros.\n\nDonde cruzamos\nmares y fronteras\nsin llevar la cuenta.",
+    "o lloré por algo\nridículo,\no vi una casa\nque se parecía\na la que soñamos construir.\n\nY cada vez\nme contestas\ncomo si yo nunca\nfuera una interrupción.",
 
-    "Donde el amor\nse mide\nno por gestos grandiosos,\nsino por las mil formas invisibles\nen que seguimos eligiéndonos\nel uno al otro,\ntodos los días.\n\nTiene que haber otra vida.",
+    "Tiene que haber otra vida\ndonde el tiempo\ny la distancia\nse avergüencen\nde lo poco\nque pueden\ncontra nosotros.",
 
-    "Donde las montañas\nrecuerdan nuestra risa\nmucho después\nde que dejamos\nde hacer eco.\n\nDonde los ríos\nsaben nuestros nombres.\n\nDonde cada banca\nen la que nos sentamos\nse convierte\nen un monumento.",
+    "Donde cruzamos\nmares y fronteras\nsin llevar la cuenta.\n\nDonde el amor\nse mide\nno por gestos grandiosos,",
 
-    "Donde tus manos\nrecuerdan las mías\ncon la misma certeza\ncon que los pájaros\nrecuerdan el cielo.",
+    "sino por las mil formas invisibles\nen que seguimos eligiéndonos\nel uno al otro,\ntodos los días.\n\nTiene que haber otra vida.",
+
+    "Donde las montañas\nrecuerdan nuestra risa\nmucho después\nde que dejamos\nde hacer eco.\n\nDonde los ríos\nsaben nuestros nombres.",
+
+    "Donde cada banca\nen la que nos sentamos\nse convierte\nen un monumento.\n\nDonde tus manos\nrecuerdan las mías\ncon la misma certeza\ncon que los pájaros\nrecuerdan el cielo.",
 
     "Donde tu huella\nsobrevive tu tacto.\n\nDonde nunca tengo\nque preguntarme\nsi esta es\nla última vez\nque sostendré tu rostro\nentre mis dos manos.",
 
     "Quizás el cielo\nno es para siempre.\n\nQuizás el cielo\nes simplemente la vida\ndonde nada hermoso\ntiene que terminar\nantes de tiempo.",
 
-    "Quizás eso es\nlo que Keats quiso decir.\n\nO quizás\nél era solo otra persona\nque amó a alguien\nlo suficiente\npara creer\nque el universo\nno podría ser\ntan cruel\ncomo para darnos\ntanta ternura\nsolo una vez.",
+    "Quizás eso es\nlo que Keats quiso decir.\n\nO quizás\nél era solo otra persona\nque amó a alguien\nlo suficiente\npara creer",
 
-    "Porque si un amor así\npuede existir,\n\nentonces en algún lugar—\n\nya sea después\nde esta vida,\no junto a ella,\no escondido dentro\nde la que casi tuvimos—",
+    "que el universo\nno podría ser\ntan cruel\ncomo para darnos\ntanta ternura\nsolo una vez.\n\nPorque si un amor así\npuede existir,",
+
+    "entonces en algún lugar—\n\nya sea después\nde esta vida,\no junto a ella,\no escondido dentro\nde la que casi tuvimos—",
 
     "Tiene que haber\nuna mañana\n\nen la que despierte,\n\ny lo primero\nque busque\nya no sea\nesperanza.\n\nSeas tú."
   ];
@@ -404,10 +429,25 @@
   function goTo(index) {
     if (index < 0 || index >= totalPages || index === current) return;
     var leaves = stage.querySelectorAll('.leaf');
-    leaves[current].classList.remove('active');
+    var goingForward = index > current;
+    var outgoing = leaves[current];
+    var incoming = leaves[index];
+
+    outgoing.classList.remove('active');
+    outgoing.classList.add(goingForward ? 'exit-left' : 'exit-right');
+
+    incoming.classList.add(goingForward ? 'enter-right' : 'enter-left');
+    // force layout so the enter position is applied before removing it
+    incoming.getBoundingClientRect();
+    incoming.classList.add('active');
+    incoming.classList.remove('enter-right', 'enter-left');
+
     current = index;
-    leaves[current].classList.add('active');
     updateChrome();
+
+    setTimeout(function () {
+      outgoing.classList.remove('exit-left', 'exit-right');
+    }, 500);
   }
 
   function goNext() { goTo(current + 1); }
