@@ -94,11 +94,17 @@
   .reader-stage {
     position: absolute;
     inset: 0;
-    bottom: 90px;
+    bottom: 110px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 0 8vw;
+    padding-top: 12vh;
+    padding-left: 8vw;
+    padding-right: 8vw;
+  }
+
+  @media (max-height: 700px) {
+    .reader-stage { padding-top: 8vh; }
   }
 
   .leaf {
