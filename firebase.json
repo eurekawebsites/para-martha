@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "para-martha",
     "public": ".",
     "ignore": [
       "firebase.json",
